@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+.wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+}
+  
+ul {
+  list-style-type: none;
+}
+li {
+  min-height: 48px;
+  padding-bottom: 8px;
+}
+.message_gutter {
+  position: absolute;
+  width: 72px;
+}
+.message_gutter img {
+  border-radius: 4px;
+}
+.message_content {
+  margin-left: 72px;
+}
+.username {
+  display: inline;
+  font-weight: 900;
+  color: #2c2d30!important;
+  line-height: 18px;
+}
+.time {
+  display: inline;
+}
+.message_text {
+  display: block;
+}
+</style>
+
+</head>
+<body>
+
+<div class="wrapper">
+<!--<img src="/logo.png" width="70"/>-->
+<h1>(Logo here) Collaborative Technology Alliance slack chat</h1>
+<p>We are united by the vision that people can do more, together, and are stewarding tools, communities, processes, networks and ecosystems to make that vision a reality.</p>
+<p>This chat starts at the latest and scrolls down to the oldest messages, and will display new messages as they appear.</p>
+<p>Sign in and chat: <a href="https://ct-alliance.slack.com" target="_blank">ct-alliance.slack.com</a><br>
+   Sign up: <a href="https://collaborative-tech-alliance.herokuapp.com/" target="_blank">here</a></p>
+<ul id="newMessages">
+
+</ul>
+<ul id="existingMessages">
+
+</ul>
+</div>
+
+<script>
+var host = location.origin.replace(/^http/, 'ws');
+var ws = new WebSocket(host);
+ws.onmessage = function (event) {
+  var data = JSON.parse(event.data);
+  console.log(data);
+  if (data.type === 'single') {
+    addMessage('newMessages', data.data);
+  } else if (data.type === 'history') {
+    data.data.forEach(function (message) {
+      addMessage('existingMessages', message);
+    });
+  }
+};
+function addZero(i) {
+                if (i < 10) {
+                    i = "0" + i;
+                }
+                return i;
+            }
+
+function addMessage(listID, message) {
+    
+    var timestamp = new Date(message.ts*1000);
+    var date = addZero(timestamp.getHours()) + ":" + addZero(timestamp.getMinutes());
+    date += ' ' + (timestamp.getMonth() + 1) + '/' + timestamp.getDate();
+    var section = document.querySelector('#' + listID);
+    var li = document.createElement('li');
+    li.innerHTML = '<div class="message_gutter"><img src="' + message.user_image + '" /></div>' + 
+                   '<div class="message_content"><span class="username">' + message.user_name + '</span>&nbsp;&nbsp;' +
+                   '<span class="time">' + date + '</span>' +
+                   '<span class="message_text">' + message.text + '</span></div>';
+    section.insertBefore(li, section.firstChild);
+}
+</script>
+</body>
+</html>

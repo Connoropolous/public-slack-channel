@@ -1,0 +1,16 @@
+{
+  "name": "public-slack-channel",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/connoropolous/public-slack-channel.git"
+  },
+  "dependencies": {
+    "express": "^4.0.0",
+    "request": "^2.67.0",
+    "slack-client": "1.5.0",
+    "underscore": "^1.8.3",
+    "ws": "^0.8.1"
+  }
+}
